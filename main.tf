@@ -25,3 +25,6 @@ module "lambda" {
   lambda_zip_path  = "lambda/fetch_api.zip"
   api_endpoint     = var.api_endpoint
 }
+
+
+
