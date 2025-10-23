@@ -4,13 +4,20 @@ module "iam_lambda" {
   policy_arn = "arn:aws:iam::aws:policy/AWSLambdaBasicExecutionRole"
 }
 
-module "s3" {
-  source = "./modules/s3"
-  prefix = "my-pipeline"
-}
+
 
 module "observability" {
   source            = "./modules/observability"
   function_name     = "etl-transform"
   retention_in_days = 14
+}
+
+module "kms" {
+  source = "./modules/kms"
+}
+
+module "s3" {
+  source      = "./modules/s3"
+  prefix      = "my-pipeline"
+  kms_key_arn = module.kms.kms_key_arn
 }
