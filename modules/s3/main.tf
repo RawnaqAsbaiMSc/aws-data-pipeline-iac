@@ -1,7 +1,6 @@
 resource "aws_s3_bucket" "raw" {
   bucket = "${var.prefix}-raw-data"
 }
-
 resource "aws_s3_bucket_server_side_encryption_configuration" "raw_encryption" {
   bucket = aws_s3_bucket.raw.id
 

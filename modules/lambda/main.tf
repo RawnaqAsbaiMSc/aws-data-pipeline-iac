@@ -20,12 +20,12 @@ resource "aws_lambda_function" "fetch_api_data" {
 resource "aws_cloudwatch_event_rule" "lambda_schedule" {
   name                = "${var.prefix}-schedule"
   description         = "Triggers Lambda every hour"
-  schedule_expression = "rate(1 hour)" 
+  schedule_expression = "rate(1 hour)"
 }
 
 resource "aws_cloudwatch_event_target" "lambda_target" {
   rule      = aws_cloudwatch_event_rule.lambda_schedule.name
-  target_id = "lambda"
+  target_id = "${var.prefix}-target"
   arn       = aws_lambda_function.fetch_api_data.arn
 }
 

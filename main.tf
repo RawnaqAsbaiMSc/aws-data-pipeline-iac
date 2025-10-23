@@ -1,7 +1,7 @@
 
 module "s3" {
   source      = "./modules/s3"
-  prefix      = "my-pipeline"
+  prefix      = var.prefix
   kms_key_arn = module.kms.kms_key_arn
 }
 module "kms" {
