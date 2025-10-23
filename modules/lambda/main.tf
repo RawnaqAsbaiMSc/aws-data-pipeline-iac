@@ -29,6 +29,7 @@ resource "aws_cloudwatch_event_target" "lambda_target" {
   arn       = aws_lambda_function.fetch_api_data.arn
 }
 
+
 resource "aws_lambda_permission" "allow_cloudwatch" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
