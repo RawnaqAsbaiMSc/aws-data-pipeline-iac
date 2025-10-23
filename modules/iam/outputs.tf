@@ -1,3 +1,5 @@
-output "role_arn" {
-  value = aws_iam_role.lambda_etl_role.arn
+
+output "lambda_role_arn" {
+  description = "ARN of the IAM role for Lambda"
+  value       = aws_iam_role.lambda_etl_role.arn
 }

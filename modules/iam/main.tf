@@ -18,3 +18,4 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
   role       = aws_iam_role.lambda_etl_role.name
   policy_arn = var.policy_arn
 }
+

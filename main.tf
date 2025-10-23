@@ -1,8 +1,4 @@
-module "iam_lambda" {
-  source     = "./modules/iam"
-  role_name  = "lambda-etl-role"
-  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaBasicExecutionRole"
-}
+
 module "s3" {
   source      = "./modules/s3"
   prefix      = "my-pipeline"
@@ -17,6 +13,11 @@ module "observability" {
   retention_in_days = 14
 }
 
+module "iam" {
+  source     = "./modules/iam"
+  role_name  = "lambda-etl-role"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
 module "lambda" {
   source           = "./modules/lambda"
   prefix           = var.prefix
@@ -24,5 +25,3 @@ module "lambda" {
   lambda_zip_path  = "lambda/fetch_api.zip"
   api_endpoint     = var.api_endpoint
 }
-
-
