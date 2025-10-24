@@ -1,20 +1,25 @@
 variable "function_name" {
-  description = "Name of the Lambda function"
-  type        = string
+  type = string
 }
 
 variable "filename" {
-  description = "Path to zipped Lambda artifact"
-  type        = string
+  type = string
 }
 
 variable "handler" {
-  description = "Lambda handler entry point"
-  type        = string
+  type = string
 }
 
 variable "lambda_role_arn" {
-  description = "IAM role ARN for Lambda execution"
-  type        = string
+  type = string
 }
 
+variable "runtime" {
+  type    = string
+  default = "python3.12"
+}
+
+variable "description" {
+  type    = string
+  default = ""
+}

@@ -1,13 +1,13 @@
+# ─────────────────────────────────────────────
+# KMS Key
+# ─────────────────────────────────────────────
 module "kms" {
   source = "./modules/kms"
 }
 
-module "s3" {
-  source      = "./modules/s3"
-  prefix      = var.prefix
-  kms_key_arn = module.kms.kms_key_arn
-}
-
+# ─────────────────────────────────────────────
+# IAM Roles for Lambdas
+# ─────────────────────────────────────────────
 module "iam" {
   source           = "./modules/iam"
   prefix           = var.prefix
@@ -15,10 +15,13 @@ module "iam" {
   basic_policy_arn = var.basic_policy_arn
 }
 
+# ─────────────────────────────────────────────
+# Lambda Functions (code lives in /lambda/*.zip)
+# ─────────────────────────────────────────────
 module "ingest_lambda" {
   source          = "./modules/lambda"
   function_name   = "${var.prefix}-ingest-data"
-  filename        = "${path.module}/artifacts/ingest_data.zip"
+  filename        = "${path.module}/lambda/ingest_data.zip"
   handler         = "lambda_function.lambda_handler"
   lambda_role_arn = module.iam.ingest_lambda_role_arn
 }
@@ -26,7 +29,7 @@ module "ingest_lambda" {
 module "transform_raw_lambda" {
   source          = "./modules/lambda"
   function_name   = "${var.prefix}-transform-raw-to-processed"
-  filename        = "${path.module}/artifacts/transform_raw_to_processed.zip"
+  filename        = "${path.module}/lambda/transform_raw_to_processed.zip"
   handler         = "lambda_function.lambda_handler"
   lambda_role_arn = module.iam.transform_raw_lambda_role_arn
 }
@@ -34,7 +37,39 @@ module "transform_raw_lambda" {
 module "transform_analytics_lambda" {
   source          = "./modules/lambda"
   function_name   = "${var.prefix}-transform-processed-to-analytics"
-  filename        = "${path.module}/artifacts/transform_processed_to_analytics.zip"
+  filename        = "${path.module}/lambda/transform_processed_to_analytics.zip"
   handler         = "lambda_function.lambda_handler"
   lambda_role_arn = module.iam.transform_analytics_lambda_role_arn
+}
+
+# ─────────────────────────────────────────────
+# S3 Buckets (no Lambda references here!)
+# ─────────────────────────────────────────────
+module "s3" {
+  source      = "./modules/s3"
+  prefix      = var.prefix
+  kms_key_arn = module.kms.kms_key_arn
+}
+
+# ─────────────────────────────────────────────
+# S3 Notifications + Lambda Permissions
+# ─────────────────────────────────────────────
+module "s3_notifications" {
+  source = "./modules/s3_notifications"
+
+  raw_bucket_id       = module.s3.raw_bucket_id
+  processed_bucket_id = module.s3.processed_bucket_id
+  analytics_bucket_id = module.s3.analytics_bucket_id
+
+  raw_bucket_arn       = module.s3.raw_bucket_arn
+  processed_bucket_arn = module.s3.processed_bucket_arn
+  analytics_bucket_arn = module.s3.analytics_bucket_arn
+
+  ingest_lambda_arn              = module.ingest_lambda.lambda_arn
+  transform_raw_lambda_arn       = module.transform_raw_lambda.lambda_arn
+  transform_analytics_lambda_arn = module.transform_analytics_lambda.lambda_arn
+
+  ingest_lambda_name              = module.ingest_lambda.lambda_name
+  transform_raw_lambda_name       = module.transform_raw_lambda.lambda_name
+  transform_analytics_lambda_name = module.transform_analytics_lambda.lambda_name
 }
