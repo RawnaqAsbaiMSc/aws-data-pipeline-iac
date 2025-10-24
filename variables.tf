@@ -1,9 +1,15 @@
 variable "prefix" {
-  description = "Prefix for naming resources"
+  description = "Project prefix used for naming resources"
   type        = string
 }
 
-variable "api_endpoint" {
-  description = "External API endpoint for Lambda"
+variable "region" {
+  description = "AWS region for resource deployment"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "basic_policy_arn" {
+  description = "ARN of AWSLambdaBasicExecutionRole managed policy"
   type        = string
 }
