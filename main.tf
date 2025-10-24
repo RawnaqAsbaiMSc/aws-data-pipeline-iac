@@ -1,13 +1,9 @@
-# ─────────────────────────────────────────────
-# KMS Key
-# ─────────────────────────────────────────────
+# KMS
 module "kms" {
   source = "./modules/kms"
 }
 
-# ─────────────────────────────────────────────
-# IAM Roles for Lambdas
-# ─────────────────────────────────────────────
+# IAM 
 module "iam" {
   source           = "./modules/iam"
   prefix           = var.prefix
@@ -15,9 +11,7 @@ module "iam" {
   basic_policy_arn = var.basic_policy_arn
 }
 
-# ─────────────────────────────────────────────
-# Lambda Functions (code lives in /lambda/*.zip)
-# ─────────────────────────────────────────────
+# Lambda Functions 
 module "ingest_lambda" {
   source          = "./modules/lambda"
   function_name   = "${var.prefix}-ingest-data"
@@ -42,18 +36,14 @@ module "transform_analytics_lambda" {
   lambda_role_arn = module.iam.transform_analytics_lambda_role_arn
 }
 
-# ─────────────────────────────────────────────
-# S3 Buckets (no Lambda references here!)
-# ─────────────────────────────────────────────
+# S3 Buckets 
 module "s3" {
   source      = "./modules/s3"
   prefix      = var.prefix
   kms_key_arn = module.kms.kms_key_arn
 }
 
-# ─────────────────────────────────────────────
 # S3 Notifications + Lambda Permissions
-# ─────────────────────────────────────────────
 module "s3_notifications" {
   source = "./modules/s3_notifications"
 
