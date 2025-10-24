@@ -18,6 +18,10 @@ module "ingest_lambda" {
   filename        = "${path.module}/lambda/ingest_data.zip"
   handler         = "lambda_function.lambda_handler"
   lambda_role_arn = module.iam.ingest_lambda_role_arn
+
+  environment_variables = {
+  OUTPUT_BUCKET = var.processed_bucket_name
+  }
 }
 
 module "transform_raw_lambda" {
@@ -26,6 +30,9 @@ module "transform_raw_lambda" {
   filename        = "${path.module}/lambda/transform_raw_to_processed.zip"
   handler         = "lambda_function.lambda_handler"
   lambda_role_arn = module.iam.transform_raw_lambda_role_arn
+  environment_variables = {
+  OUTPUT_BUCKET = var.analytics_bucket_name
+  }
 }
 
 module "transform_analytics_lambda" {

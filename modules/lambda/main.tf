@@ -7,4 +7,8 @@ resource "aws_lambda_function" "this" {
   source_code_hash = filebase64sha256(var.filename)
   description      = var.description
   publish          = true
+
+  environment {
+   variables = var.environment_variables
+  }
 }
