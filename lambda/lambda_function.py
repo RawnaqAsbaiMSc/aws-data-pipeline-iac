@@ -12,7 +12,7 @@ def lambda_handler(event, context):
 
             # Log to S3
             s3 = boto3.client("s3")
-            bucket_name = "<your-bucket-name>"  # e.g., rawnaq-demo-weather-logs
+            bucket_name = "rawnaq-demo-2025-weather-logs"
             key = f"weather-log-{context.aws_request_id}.txt"
             s3.put_object(Bucket=bucket_name, Key=key, Body=message)
 

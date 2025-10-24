@@ -1,4 +1,3 @@
-
 module "s3" {
   source      = "./modules/s3"
   prefix      = var.prefix
@@ -12,11 +11,11 @@ module "observability" {
   function_name     = "etl-transform"
   retention_in_days = 14
 }
-
 module "iam" {
   source     = "./modules/iam"
   role_name  = "lambda-etl-role"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  prefix     = var.prefix
 }
 module "lambda" {
   source           = "./modules/lambda"

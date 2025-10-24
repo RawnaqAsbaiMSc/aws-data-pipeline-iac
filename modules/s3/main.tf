@@ -43,10 +43,3 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "analytics_encrypt
 }
 
 
-resource "aws_s3_bucket" "weather_logs" {
-  bucket = "${var.prefix}-weather-logs"
-   tags = {
-    Name        = "${var.prefix}-weather-logs"
-    Environment = "dev"
-  }
-}

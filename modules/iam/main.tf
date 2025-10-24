@@ -34,7 +34,7 @@ resource "aws_iam_policy" "lambda_s3_write" {
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_s3_write_attach" {
-  role       = aws_iam_role.lambda_exec.name
+  role       = aws_iam_role.lambda_etl_role.name
   policy_arn = aws_iam_policy.lambda_s3_write.arn
 }
 
