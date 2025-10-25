@@ -1,4 +1,3 @@
-import boto3
 import boto3, os
 
 def lambda_handler(event, context):

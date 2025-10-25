@@ -9,6 +9,7 @@ module "iam" {
   prefix           = var.prefix
   kms_key_arn      = module.kms.kms_key_arn
   basic_policy_arn = var.basic_policy_arn
+  raw_bucket_arn  = "arn:aws:s3:::${var.raw_bucket_name}"
 }
 
 # Lambda Functions 
@@ -18,7 +19,6 @@ module "ingest_lambda" {
   filename        = "${path.module}/lambda/ingest_data.zip"
   handler         = "lambda_function.lambda_handler"
   lambda_role_arn = module.iam.ingest_lambda_role_arn
-
   environment_variables = {
   OUTPUT_BUCKET = var.processed_bucket_name
   }
@@ -69,4 +69,25 @@ module "s3_notifications" {
   ingest_lambda_name              = module.ingest_lambda.lambda_name
   transform_raw_lambda_name       = module.transform_raw_lambda.lambda_name
   transform_analytics_lambda_name = module.transform_analytics_lambda.lambda_name
+}
+
+
+#Ingestion Lambda
+module "db_ingest_lambda" {
+  source          = "./modules/lambda"
+  function_name   = "${var.prefix}-db-ingest"
+  filename        = "${path.module}/lambda/db_ingest.zip"
+  handler         = "lambda_function.lambda_handler"
+  lambda_role_arn = module.iam.db_ingest_lambda_role_arn
+
+  environment_variables = {
+    DB_TYPE     = var.db_type
+    DB_USER     = var.db_user
+    DB_PASSWORD = var.db_password
+    DB_HOST     = var.db_host
+    DB_PORT     = var.db_port
+    DB_NAME     = var.db_name
+    DB_QUERY    = var.db_query
+    RAW_BUCKET  = var.raw_bucket_name
+  }
 }
